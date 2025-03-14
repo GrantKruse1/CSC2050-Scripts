@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine;
 public class Exit
 {
     private string direction;
-    Room destination;
+    private Room destination;
 
     public Exit(string direction, Room destination)
     {
@@ -19,8 +18,8 @@ public class Exit
         return this.direction;
     }
 
-    internal Room getDestination()
+    public Room getDestination()
     {
-        throw new NotImplementedException();
+        return this.destination;
     }
 }
