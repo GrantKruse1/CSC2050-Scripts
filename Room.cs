@@ -23,30 +23,41 @@ public class Room
         return this.name;
     }
 
-    public void tryToTakeExit(string direction)
+    public bool tryToTakeExit(string direction)
     {
-        for (int i = 0; i < this.currNumberOfExits; i++)
+        Exit theExit = this.getExit(direction);
+        if (theExit != null)
         {
-            if (String.Equals(this.availableExits[i].getDirection(), direction))
+            //remove the player from the current room
+            Core.thePlayer.getCurrentRoom().removePlayer();
+
+            //place them in the destination room in that direction
+            Room destinationRoom = theExit.getDestination();
+            destinationRoom.setPlayer(Core.thePlayer);
+
+            //update the room the player is currently in so the room exits visually update
+            return true;
+        }
+        else
+        {
+            Debug.Log("No Exit In This Direction");
+            return false;
+        }
+    }
+
+    private Exit getExit(string direction)
+    {
+        if (this.hasExit(direction))
+        {
+            for (int i = 0; i < this.currNumberOfExits; i++)
             {
-                // Remove player from the current room
-                if (this.thePlayer != null)
+                if (String.Equals(this.availableExits[i].getDirection(), direction))
                 {
-                    Debug.Log($"Player leaving room: {this.getName()}");
-                    this.thePlayer.setCurrentRoom(null);
+                    return this.availableExits[i];
                 }
-
-                // Place player in the destination room
-                Room destination = this.availableExits[i].getDestination();
-                destination.setPlayer(this.thePlayer);
-
-                // Update the player's current room and visually update exits
-                Debug.Log($"Player entered room: {destination.getName()}");
-                return;
             }
         }
-
-        Debug.Log("No Exit In This Direction");
+        return null;
     }
 
     public bool hasExit(string direction)
@@ -60,6 +71,12 @@ public class Room
         }
         return false;
     }
+
+    public void removePlayer()
+    {
+        this.thePlayer = null;
+    }
+
     public void setPlayer(Player p)
     {
         this.thePlayer = p;
