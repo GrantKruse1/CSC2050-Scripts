@@ -6,20 +6,26 @@ public class Fight
 {
     private Inhabitant attacker;
     private Inhabitant defender;
-
-    public Fight()
+    private Monster theMonster;
+    public Fight(Monster m)
     {
+        this.theMonster = m;
         int roll = Random.Range(0, 20) + 1;
         if (roll <= 10)
         {
             Debug.Log("Monster goes first");
+            this.attacker = m;
+            this.defender = Core.thePlayer;
         }
         else
         {
             Debug.Log("Player goes first");
+            this.attacker = Core.thePlayer;
+            this.defender = m;
         }
 
     }
+    
 
     public void startFight()
     {
@@ -30,7 +36,7 @@ public class Fight
         while (isAlive)
         {
             int toHit = Random.Range(0, 20);
-            if (toHit >= defender.ac)
+            if (toHit >= this.defender.getAC())
             {
                 int damage = Random.Range(0, 20);
                 Debug.Log("Attacker deals " + damage + "damage");
@@ -44,11 +50,12 @@ public class Fight
             else
             {
                 Debug.Log("Defender misses");
-                object temp;
-                temp = attacker;
-                defender = temp;
-                attacker = defender;
+                
             }
+            Inhabitant temp = this.attacker;
+            this.attacker = this.defender;
+            this.defender = temp;
+
         }
     }
 }
